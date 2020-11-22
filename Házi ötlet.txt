@@ -1,0 +1,2 @@
+Házi feladatomban az ismert Tetris játékot szeretném megvalósítani mozgatással, forgatással, leejtéssel.
+A játék számolná a játékos pontszámát és a végén eltárolná a játékos nevével, hogy toplistaként meg lehessen tekinteni az eredményeket.

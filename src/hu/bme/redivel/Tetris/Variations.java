@@ -1,13 +1,13 @@
 package hu.bme.redivel.Tetris;
 
 public enum Variations {
+    Empty,
+    Border,
     I,
     O,
-    T,
-    L,
     J,
-    S,
+    L,
     Z,
-    Border,
-    Empty
+    S,
+    T
 }
