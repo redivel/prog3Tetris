@@ -17,7 +17,7 @@ public class TetrisFrame extends JFrame {
     public TetrisFrame() throws HeadlessException {
         setTitle("Tetris");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(400,500);
+        setSize(500,500);
 
         GridLayout layout = new GridLayout(1,2);
         setLayout(layout);
@@ -29,8 +29,7 @@ public class TetrisFrame extends JFrame {
             System.err.println(e);
         }
 
-        field = new JPanel();
-
+        field = new Field();
         add(field);
 
         JPanel right = new JPanel();

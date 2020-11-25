@@ -1,17 +1,17 @@
 package hu.bme.redivel.Tetris;
 
 public class Matrix {
-    private char[][] matrix;
+    private Block[][] matrix;
 
     public Matrix() {
-        matrix = new char[12][23];
+        matrix = new Block[12][23];
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 23; j++){
                 if (i == 0 || i == 11 || j == 22){
-                    matrix[i][j] = 'b';
+                    matrix[i][j] = new Block(i,j,Variations.Border);
                 }
                 else{
-                    matrix[i][j] = 'e';
+                    matrix[i][j] = new Block(i,j,Variations.Empty);
                 }
             }
         }
@@ -29,5 +29,9 @@ public class Matrix {
                 }
             }
         }
+    }
+
+    public Block get(int x, int y){
+        return matrix[x][y];
     }
 }
