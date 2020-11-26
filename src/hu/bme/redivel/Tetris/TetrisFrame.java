@@ -62,7 +62,7 @@ public class TetrisFrame extends JFrame {
         add(right);
 
         Sound tetris = new SoundLooped("TetrisDnB.wav");
-        tetris.play();
+//        tetris.play();
 
     }
 }

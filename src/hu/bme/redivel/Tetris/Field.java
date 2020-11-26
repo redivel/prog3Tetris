@@ -1,46 +1,42 @@
 package hu.bme.redivel.Tetris;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Field extends JPanel implements ActionListener {
 
-    private final int width = 12;
-    private final int height = 21;
-    private Matrix matrix = new Matrix();
+    private final Matrix matrix;
+    private Tetrimino currentPiece;
+    private Tetrimino nextPiece;
 
-    private Timer timer;
+    private final Timer timer;
     private boolean paused;
     private int points;
 
-    public void Field(){
-        timer = new Timer(400,this);
+    public Field(){
+        setFocusable(true);
+        matrix = new Matrix();
+        timer = new Timer( 600,this);
         timer.start();
+        currentPiece = new Tetrimino();
+        nextPiece = new Tetrimino();
+        addKeyListener(new ControlAdapter());
     }
 
     private void draw(Graphics g) {
-       for (int i = 0; i < width; ++i) {
+        matrix.draw(g);
+        currentPiece.draw(g);
+    }
 
-            for (int j = 0; j < height; ++j) {
-
-                Block block = matrix.get(i,j+2);
-
-                if (block.notEmpty()) {
-                    try {
-                        BufferedImage image = ImageIO.read(new File("Blocks.png"));
-                        g.drawImage(image, i*20, j*20,i*20+20,j*20+20,block.x1(),block.y1(),block.x2(),block.y2(),null);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+    private void newShape(){
+        Tetrimino t = new Tetrimino();
+        matrix.write(currentPiece);
+        currentPiece = nextPiece;
+        nextPiece = t;
     }
 
     @Override
@@ -51,6 +47,56 @@ public class Field extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(matrix.crashBottom(currentPiece)){
+            newShape();
+        }
+        else {
+            currentPiece.down();
+        }
+        repaint();
+    }
 
+    class ControlAdapter extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            int keycode = e.getKeyCode();
+
+            if (keycode == 'P') {
+                //pause
+                return;
+            }
+
+            switch (keycode) {
+
+                case KeyEvent.VK_LEFT:
+                    if(!matrix.crashLeft(currentPiece))
+                        currentPiece.left();
+                    break;
+
+                case KeyEvent.VK_RIGHT:
+                    if(!matrix.crashRight(currentPiece))
+                        currentPiece.right();
+                    break;
+
+                case KeyEvent.VK_DOWN:
+                    if(!matrix.crashBottom(currentPiece))
+                        currentPiece.down();
+                    break;
+
+                case KeyEvent.VK_A:
+                    currentPiece.rotateLeft();
+                    break;
+
+                case KeyEvent.VK_D:
+                    currentPiece.rotateRight();
+                    break;
+
+                case KeyEvent.VK_SPACE:
+                    //drop
+                    break;
+            }
+            getParent().repaint();
+        }
     }
 }
