@@ -79,6 +79,13 @@ public class Matrix {
         return false;
     }
 
+    public boolean gameOver() {
+        for (int i = 1; i < matrix.size()-1; i++) {
+            if(get(i,2).notEmpty()) return true;
+        }
+        return false;
+    }
+
     public void delete(Block b){
         b.eraseFromMatrix(matrix);
     }

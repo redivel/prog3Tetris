@@ -47,13 +47,18 @@ public class Field extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(matrix.crashBottom(currentPiece)){
-            newShape();
+        if(!matrix.gameOver()) {
+            if (matrix.crashBottom(currentPiece)) {
+                newShape();
+            }
+            else {
+                currentPiece.down();
+            }
+            repaint();
         }
-        else {
-            currentPiece.down();
+        else{
+            setFocusable(false);
         }
-        repaint();
     }
 
     class ControlAdapter extends KeyAdapter {
@@ -93,7 +98,7 @@ public class Field extends JPanel implements ActionListener {
                     break;
 
                 case KeyEvent.VK_SPACE:
-                    //drop
+                    while(!matrix.crashBottom(currentPiece)) currentPiece.down();
                     break;
             }
             getParent().repaint();
