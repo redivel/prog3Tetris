@@ -1,68 +1,68 @@
 package hu.bme.redivel.Tetris;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-public class TetrisFrame extends JFrame {
+public class TetrisFrame extends JFrame implements ActionListener{
 
-    private JPanel field;
+    private Field field;
+    private JPanel right;
     private JPanel next;
     private JPanel sidePanel;
+    private JLabel lineLabel;
     private BufferedImage image;
-    private int points;
+    private Timer timer;
+    private Sound tetris;
+    private int lines;
 
     public TetrisFrame() throws HeadlessException {
         setTitle("Tetris");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500,500);
+        timer = new Timer(300,this);
+        timer.start();
 
         GridLayout layout = new GridLayout(1,2);
         setLayout(layout);
 
-        try {
-            image = ImageIO.read(new File("profil.jpg"));
-        }
-        catch (Exception e){
-            System.err.println(e);
-        }
-
-        field = new Field();
+        field = new Field(timer);
         add(field);
 
-        JPanel right = new JPanel();
+
+        right = new JPanel();
         GridLayout rightLayout = new GridLayout(2,1);
         right.setLayout(rightLayout);
 
         next = new JPanel();
-        GridLayout nextLayout = new GridLayout();
-        nextLayout.setRows(8);
-        nextLayout.setColumns(8);
-        next.setLayout(nextLayout);
-
-        JLabel nextpic[] = new JLabel[64];
-        for (int i = 0; i < 64; i++) {
-            nextpic[i] = new JLabel(new ImageIcon(image));
-            nextpic[i].setSize(2,2);
-            next.add(nextpic[i]);
-        }
-
         right.add(next);
 
         sidePanel = new JPanel(new FlowLayout());
-        points = 15;
-        String side = "Points: " + points;
-        JLabel pointLabel = new JLabel(side);
-        sidePanel.add(pointLabel);
+        JLabel lines_string = new JLabel("Lines: ");
+        sidePanel.add(lines_string);
+        lines = 0;
+        lineLabel = new JLabel(String.valueOf(lines));
+
+        sidePanel.add(lineLabel);
+
 
         right.add(sidePanel);
 
         add(right);
 
-        Sound tetris = new SoundLooped("TetrisDnB.wav");
-//        tetris.play();
+        tetris = new SoundLooped("TetrisDnB.wav");
+        tetris.play();
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (field.getPoints() != lines) {
+            lines = field.getPoints();
+            lineLabel.setText(String.valueOf(lines));
+            lineLabel.repaint();
+        }
     }
 }

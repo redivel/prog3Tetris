@@ -69,10 +69,10 @@ public class Block {
     }
 
     public void writeToMatrix(Vector<Vector<Block>> matrix) {
-        matrix.get(x).setElementAt(this,y);
+        matrix.get(y).setElementAt(this,x);
     }
 
     public void eraseFromMatrix(Vector<Vector<Block>> matrix) {
-        matrix.get(x).setElementAt(new Block(x,y,Variations.Empty),y);
+        matrix.get(y).setElementAt(new Block(x,y,Variations.Empty),x);
     }
 }

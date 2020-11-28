@@ -17,14 +17,15 @@ public class Field extends JPanel implements ActionListener {
     private boolean paused;
     private int points;
 
-    public Field(){
+    public Field(Timer timer){
         setFocusable(true);
         matrix = new Matrix();
-        timer = new Timer( 600,this);
-        timer.start();
+        this.timer = new Timer(timer.getDelay(),this);
+        this.timer.start();
         currentPiece = new Tetrimino();
         nextPiece = new Tetrimino();
         addKeyListener(new ControlAdapter());
+        points = 0;
     }
 
     private void draw(Graphics g) {
@@ -39,6 +40,14 @@ public class Field extends JPanel implements ActionListener {
         nextPiece = t;
     }
 
+    public Tetrimino getNextPiece() {
+        return nextPiece;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
@@ -50,6 +59,8 @@ public class Field extends JPanel implements ActionListener {
         if(!matrix.gameOver()) {
             if (matrix.crashBottom(currentPiece)) {
                 newShape();
+                points += matrix.removeFull();
+                matrix.print();
             }
             else {
                 currentPiece.down();
@@ -89,19 +100,25 @@ public class Field extends JPanel implements ActionListener {
                         currentPiece.down();
                     break;
 
+                case KeyEvent.VK_UP:
+                    points+=10;
+                    break;
+
                 case KeyEvent.VK_A:
-                    currentPiece.rotateLeft();
+                    if(matrix.canRotate(currentPiece,-1))
+                        currentPiece.rotate(-1);
                     break;
 
                 case KeyEvent.VK_D:
-                    currentPiece.rotateRight();
+                    if(matrix.canRotate(currentPiece,1))
+                        currentPiece.rotate(1);
                     break;
 
                 case KeyEvent.VK_SPACE:
                     while(!matrix.crashBottom(currentPiece)) currentPiece.down();
                     break;
             }
-            getParent().repaint();
+            repaint();
         }
     }
 }

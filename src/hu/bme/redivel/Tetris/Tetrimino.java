@@ -12,7 +12,7 @@ public class Tetrimino {
     public Tetrimino() {
         currentRot = 0;
         initCoords();
-        int rand = random.nextInt(3)+random.nextInt(4);
+        int rand = random.nextInt(4)+random.nextInt(4);
 
         rotations = new Shape[]{
                 new Shape(coords[rand][0],Variations.valueOf(rand)),
@@ -107,22 +107,17 @@ public class Tetrimino {
         }
     }
 
-    public void rotateLeft(){
-        if(currentRot == 0){
+    public void rotate(int dir){
+        if(currentRot == 0 && dir == -1){
             currentRot = 3;
         }
-        else {
-            currentRot--;
-        }
-    }
-
-    public void rotateRight(){
-        if(currentRot == 3){
+        else if(currentRot == 3 && dir == 1){
             currentRot = 0;
         }
-        else {
-            currentRot++;
+        else{
+            currentRot += dir;
         }
+
     }
 
     public void draw(Graphics g){
