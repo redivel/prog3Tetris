@@ -19,11 +19,14 @@ public class Field extends JPanel implements ActionListener {
 
     public Field(Timer timer){
         setFocusable(true);
-        matrix = new Matrix();
-        this.timer = new Timer(timer.getDelay(),this);
-        this.timer.start();
+        matrix = new Matrix(12,23);
+        this.timer = timer;
         currentPiece = new Tetrimino();
         nextPiece = new Tetrimino();
+        currentPiece.pushToNext();
+        currentPiece.pushToSpawn();
+        nextPiece.pushToNext();
+        setPreferredSize(new Dimension(240,420));
         addKeyListener(new ControlAdapter());
         points = 0;
     }
@@ -33,11 +36,13 @@ public class Field extends JPanel implements ActionListener {
         currentPiece.draw(g);
     }
 
-    private void newShape(){
+    private void newPiece(){
         Tetrimino t = new Tetrimino();
         matrix.write(currentPiece);
         currentPiece = nextPiece;
         nextPiece = t;
+        currentPiece.pushToSpawn();
+        nextPiece.pushToNext();
     }
 
     public Tetrimino getNextPiece() {
@@ -58,7 +63,7 @@ public class Field extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(!matrix.gameOver()) {
             if (matrix.crashBottom(currentPiece)) {
-                newShape();
+                newPiece();
                 points += matrix.removeFull();
                 matrix.print();
             }
@@ -68,7 +73,10 @@ public class Field extends JPanel implements ActionListener {
             repaint();
         }
         else{
-            setFocusable(false);
+            timer.stop();
+            GameOverDialog popup = new GameOverDialog();
+            String name = JOptionPane.showInputDialog(getParent().getParent().getParent().getParent(), "What is your name?", null);
+
         }
     }
 
@@ -79,29 +87,32 @@ public class Field extends JPanel implements ActionListener {
             int keycode = e.getKeyCode();
 
             if (keycode == 'P') {
-                //pause
+                if(paused){
+                    paused = false;
+                    timer.start();
+                }
+                else {
+                    paused = true;
+                    timer.stop();
+                }
                 return;
             }
 
             switch (keycode) {
 
                 case KeyEvent.VK_LEFT:
-                    if(!matrix.crashLeft(currentPiece))
+                    if(!matrix.crashLeft(currentPiece) && !matrix.crashBottom(currentPiece))
                         currentPiece.left();
                     break;
 
                 case KeyEvent.VK_RIGHT:
-                    if(!matrix.crashRight(currentPiece))
+                    if(!matrix.crashRight(currentPiece) && !matrix.crashBottom(currentPiece))
                         currentPiece.right();
                     break;
 
                 case KeyEvent.VK_DOWN:
                     if(!matrix.crashBottom(currentPiece))
                         currentPiece.down();
-                    break;
-
-                case KeyEvent.VK_UP:
-                    points+=10;
                     break;
 
                 case KeyEvent.VK_A:

@@ -16,7 +16,7 @@ public class Sound {
             clip = AudioSystem.getClip();
         }
         catch(Exception e){
-            System.err.println("Audio error");
+            e.printStackTrace();
         }
         loop = 0;
     }
@@ -28,7 +28,7 @@ public class Sound {
             clip.loop(loop);
         }
         catch (Exception e){
-            System.err.println("Audio error");
+            e.printStackTrace();
         }
     }
 }

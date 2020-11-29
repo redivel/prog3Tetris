@@ -83,6 +83,29 @@ public class Tetrimino {
         };
     }
 
+    public void pushToNext() {
+        for (int i = 0; i < 6; i++) {
+            right();
+        }
+        for (int i = 0; i < 7; i++) {
+            down();
+        }
+    }
+
+    public void pushToSpawn() {
+        for (int i = 0; i < 7; i++) {
+            up();
+        }
+    }
+
+    private void up(){
+        for (Shape s:rotations) {
+            for (Block b:s.getBlocks()) {
+                b.up();
+            }
+        }
+    }
+
     public void down(){
         for (Shape s:rotations) {
             for (Block b:s.getBlocks()) {

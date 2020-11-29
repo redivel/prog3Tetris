@@ -5,10 +5,12 @@ import java.util.Vector;
 
 public class Matrix {
     private final Vector<Vector<Block>> matrix;
-    private int width = 12, height = 23;
+    private int width, height;
     private int removed;
 
-    public Matrix() {
+    public Matrix(int width, int height) {
+        this.width = width;
+        this.height = height;
         matrix = new Vector<>();
         for (int i = 0; i < height; i++) {
             matrix.add(new Vector<>());

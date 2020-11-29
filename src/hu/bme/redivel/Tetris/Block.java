@@ -19,8 +19,8 @@ public class Block {
     }
 
     public Block(int[] coords, Variations color) {
-        this.x = coords[0]+6;
-        this.y = coords[1]+1;
+        this.x = coords[0];
+        this.y = coords[1];
         this.color = color;
     }
 
@@ -41,6 +41,10 @@ public class Block {
 
     public Variations getColor() {
         return color;
+    }
+
+    public void up(){
+        y--;
     }
 
     public void down(){
