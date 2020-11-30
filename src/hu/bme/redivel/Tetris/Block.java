@@ -5,9 +5,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Block {
+public class Block implements Serializable {
     private int x,y;
     private int dx1,dy1,dx2,dy2;
     private final Variations color;

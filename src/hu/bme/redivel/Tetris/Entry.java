@@ -1,6 +1,8 @@
 package hu.bme.redivel.Tetris;
 
-public class Entry {
+import java.io.Serializable;
+
+public class Entry implements Serializable {
     private String name;
     private int points;
 

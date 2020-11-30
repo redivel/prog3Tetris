@@ -1,6 +1,8 @@
 package hu.bme.redivel.Tetris;
 
-public class Shape {
+import java.io.Serializable;
+
+public class Shape implements Serializable {
     private Block[] blocks;
 
     public Shape(int[][] coords, Variations color){

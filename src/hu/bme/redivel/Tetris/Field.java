@@ -6,15 +6,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Field extends JPanel implements ActionListener {
 
-    private final Matrix matrix;
+    private Matrix matrix;
     private Tetrimino currentPiece;
     private Tetrimino nextPiece;
 
     private final Timer timer;
-    private boolean paused;
+    private boolean paused, gameOver;
     private int points;
 
     public Field(Timer timer){
@@ -26,6 +30,20 @@ public class Field extends JPanel implements ActionListener {
         currentPiece.pushToNext();
         currentPiece.pushToSpawn();
         nextPiece.pushToNext();
+        this.timer.start();
+        setPreferredSize(new Dimension(240,420));
+        addKeyListener(new ControlAdapter());
+        points = 0;
+    }
+
+    public void reset(){
+        matrix = new Matrix(12,23);
+        currentPiece = new Tetrimino();
+        nextPiece = new Tetrimino();
+        currentPiece.pushToNext();
+        currentPiece.pushToSpawn();
+        nextPiece.pushToNext();
+        this.timer.start();
         setPreferredSize(new Dimension(240,420));
         addKeyListener(new ControlAdapter());
         points = 0;
@@ -36,7 +54,7 @@ public class Field extends JPanel implements ActionListener {
         currentPiece.draw(g);
     }
 
-    private void newPiece(){
+    public void newPiece(){
         Tetrimino t = new Tetrimino();
         matrix.write(currentPiece);
         currentPiece = nextPiece;
@@ -59,9 +77,44 @@ public class Field extends JPanel implements ActionListener {
         draw(g);
     }
 
+    public boolean gameOver() {
+        return gameOver;
+    }
+
+    public void save(String saveName){
+        ObjectOutputStream saveFile;
+        try{
+            saveFile = new ObjectOutputStream(new FileOutputStream("Saves/"+saveName));
+            saveFile.writeObject(matrix);
+            saveFile.writeObject(currentPiece);
+            saveFile.writeObject(nextPiece);
+            saveFile.writeObject(points);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void load(String saveName){
+        ObjectInputStream saveFile;
+        try{
+            saveFile = new ObjectInputStream(new FileInputStream("Saves/"+saveName));
+            matrix = (Matrix) saveFile.readObject();
+            currentPiece = (Tetrimino) saveFile.readObject();
+            nextPiece = (Tetrimino) saveFile.readObject();
+            points = (int) saveFile.readObject();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(!matrix.gameOver()) {
+        gameOver = matrix.gameOver();
+        if(!gameOver) {
             if (matrix.crashBottom(currentPiece)) {
                 newPiece();
                 points += matrix.removeFull();
@@ -74,9 +127,6 @@ public class Field extends JPanel implements ActionListener {
         }
         else{
             timer.stop();
-            GameOverDialog popup = new GameOverDialog();
-            String name = JOptionPane.showInputDialog(getParent().getParent().getParent().getParent(), "What is your name?", null);
-
         }
     }
 

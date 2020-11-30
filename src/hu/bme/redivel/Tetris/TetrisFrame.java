@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 public class TetrisFrame extends JFrame implements ActionListener{
     private JPanel right,sidePanel;
@@ -27,7 +29,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
         setLayout(new GridLayout(1,2));
 
         field = new Field(timer);
-        add(field);
+        add(field,0);
 
         right = new JPanel(new GridLayout(2,1));
 
@@ -61,23 +63,25 @@ public class TetrisFrame extends JFrame implements ActionListener{
         constraints.gridy = 3;
         saveButton = new JButton("SAVE");
         saveButton.setFocusable(false);
+        saveButton.addActionListener(new SaveButtonActionListener());
         sidePanel.add(saveButton,constraints);
 
         constraints.gridy = 4;
         loadButton = new JButton("LOAD");
         loadButton.setFocusable(false);
+        loadButton.addActionListener(new LoadButtonActionListener());
         sidePanel.add(loadButton,constraints);
 
         constraints.gridy = 5;
         highscoresButton = new JButton("HIGHSCORES");
         highscoresButton.setFocusable(false);
+        highscoresButton.addActionListener(new HighscoresButtonActionListener());
         sidePanel.add(highscoresButton,constraints);
 
         right.add(sidePanel);
-        add(right);
+        add(right,1);
 
         timer.addActionListener(field);
-        timer.start();
 
         tetrisSound = new SoundLooped("tetris.wav");
 //        tetrisSound.play();
@@ -86,13 +90,69 @@ public class TetrisFrame extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (field.getPoints() != lines) {
-            lines = field.getPoints();
-            lineString = "Lines: " + lines;
-            lineLabel.setText(lineString);
-            lineLabel.repaint();
+        if(!field.gameOver()) {
+            if (field.getPoints() != lines) {
+                lines = field.getPoints();
+                lineString = "Lines: " + lines;
+                lineLabel.setText(lineString);
+                lineLabel.repaint();
+            }
+            next.setNextPiece(field.getNextPiece());
+            next.repaint();
         }
-        next.setNextPiece(field.getNextPiece());
-        next.repaint();
+        else{
+            String name = JOptionPane.showInputDialog(this, "Enter name and press OK to add to Highscores!", null);
+            if (name != null) highscores.addEntry(name,lines);
+            field.reset();
+            lines = 0;
+        }
+    }
+
+    private class SaveButtonActionListener implements ActionListener{
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer.stop();
+            String saveName;
+            saveName = JOptionPane.showInputDialog(TetrisFrame.this, "Enter name for save file and press OK to save!", null);
+            field.save(saveName);
+            timer.start();
+        }
+    }
+
+    private class LoadButtonActionListener implements ActionListener{
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer.stop();
+            String saveName = JOptionPane.showInputDialog(TetrisFrame.this, "Enter name of save file and press OK to load!", null);
+            field.load(saveName);
+            timer.start();
+        }
+    }
+
+    private class HighscoresButtonActionListener implements ActionListener{
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param e the event to be processed
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timer.stop();
+            JFrame highscoresFrame = new JFrame();
+            highscoresFrame.setVisible(true);
+        }
     }
 }

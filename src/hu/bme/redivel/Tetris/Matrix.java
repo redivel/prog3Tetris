@@ -1,9 +1,10 @@
 package hu.bme.redivel.Tetris;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Matrix {
+public class Matrix implements Serializable {
     private final Vector<Vector<Block>> matrix;
     private int width, height;
     private int removed;
@@ -152,9 +153,4 @@ public class Matrix {
         t.rotate(-dir);
         return true;
     }
-
-    public void delete(Block b){
-        b.eraseFromMatrix(matrix);
-    }
- 
 }

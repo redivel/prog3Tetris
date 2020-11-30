@@ -3,7 +3,7 @@ package hu.bme.redivel.Tetris;
 import java.io.*;
 import java.util.ArrayList;
 
-public class HighScores {
+public class HighScores implements Serializable {
     private ArrayList<Entry> highscores;
 
     public HighScores() {

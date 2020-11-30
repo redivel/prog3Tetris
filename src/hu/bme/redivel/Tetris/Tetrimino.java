@@ -1,9 +1,10 @@
 package hu.bme.redivel.Tetris;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Tetrimino {
+public class Tetrimino implements Serializable {
     private Shape[] rotations;
     private int currentRot;
     int[][][][] coords;
@@ -93,7 +94,7 @@ public class Tetrimino {
     }
 
     public void pushToSpawn() {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             up();
         }
     }
@@ -152,5 +153,4 @@ public class Tetrimino {
     public Shape getCurShape(){
         return rotations[currentRot];
     }
-
 }
