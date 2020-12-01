@@ -1,11 +1,4 @@
 Levi	8
+Peti	6
+Jani	3
 asd	0
-asdf	0
-asd	0
-asdf	0
-asd	0
-asdf	0
-asdf	0
-asdf	0
-asdf	0
-asdf	0

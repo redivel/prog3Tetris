@@ -109,8 +109,6 @@ public class Field extends JPanel implements ActionListener {
         }
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         gameOver = matrix.gameOver();

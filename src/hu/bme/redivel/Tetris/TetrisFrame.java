@@ -120,7 +120,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
             timer.stop();
             String saveName;
             saveName = JOptionPane.showInputDialog(TetrisFrame.this, "Enter name for save file and press OK to save!", null);
-            field.save(saveName);
+            if (saveName != null) field.save(saveName);
             timer.start();
         }
     }
@@ -136,7 +136,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             timer.stop();
             String saveName = JOptionPane.showInputDialog(TetrisFrame.this, "Enter name of save file and press OK to load!", null);
-            field.load(saveName);
+            if (saveName != null) field.load(saveName);
             timer.start();
         }
     }
@@ -151,7 +151,7 @@ public class TetrisFrame extends JFrame implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             timer.stop();
-            JFrame highscoresFrame = new JFrame();
+            HighscoreFrame highscoresFrame = new HighscoreFrame(highscores,timer);
             highscoresFrame.setVisible(true);
         }
     }

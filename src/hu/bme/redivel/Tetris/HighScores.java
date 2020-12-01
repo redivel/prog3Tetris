@@ -14,6 +14,10 @@ public class HighScores implements Serializable {
         }
     }
 
+    public ArrayList<Entry> getHighscores() {
+        return highscores;
+    }
+
     private void loadHighscores() throws IOException {
         highscores = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader("highscores.txt"));
